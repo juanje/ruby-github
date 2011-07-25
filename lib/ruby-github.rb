@@ -12,6 +12,14 @@ module GitHub
       url = BASE_URL + "/user/show/#{user}"
       GitHub::User.new(JSON.parse(open(url).read)["user"])
     end
+
+    # Fetches the repositories for a given user.
+    def self.repositories(user)
+      url = BASE_URL + "/repos/show/#{user}"
+      JSON.parse(open(url).read)["repositories"].collect{ |r|
+        GitHub::Repository.new(r.merge(:user => user))
+      }
+    end
   
     # Fetches the commits for a given repository.
     def self.commits(user,repository,branch="master")
